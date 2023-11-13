@@ -4,6 +4,7 @@ const router = express.Router();
 const batch_model = require('../models/batch'); // Import the Course model
 const announcement = require('../models/announcement'); // Import the Announcement model
 const user = require('../models/users'); // Import the User Data
+const schedule_model = require('../models/schedule'); //Import the Schedule model
 // Create User Controller
 const createUser = async (req, res) => {
         try {
@@ -49,7 +50,7 @@ const deleteUser = async (req, res) => {
                 res.status(500).json({ error: 'Error deleting user' });
         }
 };
-
+// Login User Controller
 const loginUser = async (req, res) => {
         const { name, student, email, score, batch } = req.body;
         try {
@@ -61,15 +62,17 @@ const loginUser = async (req, res) => {
                 }
 
                 // Find enrolled batches and announcements in parallel
-                const [batchEnrolled, announcementList] = await Promise.all([
+                const [batchEnrolled, announcementList,scheduleList] = await Promise.all([
                         batch_model.find({ _id: { $in: userDetails.batch.map(v => v.toString()) } }),
                         announcement.find({ CourseID: { $in: userDetails.batch.map(v => v.toString()) } }),
+                        schedule_model.find({ batch: { $in: userDetails.batch.map(v => v.toString()) } }),
                 ]);
-
+                
                 const userlog = {
                         announcementList,
                         userDetails,
                         batchEnrolled,
+                        scheduleList
                 };
 
                 res.status(200).json({ message: userlog });

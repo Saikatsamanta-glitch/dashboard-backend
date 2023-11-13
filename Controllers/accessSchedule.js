@@ -44,7 +44,17 @@ const getEvents = async (req, res) => {
     res.status(500).json({ error: 'Error retrieving scheduling events' });
   }
 };
-
+// Post a list of all scheduling events for a batch
+const getEventsBatch = async (req, res) => {
+        const {batch} = req.body;
+        console.log(batch);
+        try {
+          const events = await Scheduling.find({batch});
+          res.status(200).json(events);
+        } catch (error) {
+          res.status(500).json({ error: 'Error retrieving scheduling events' });
+        }
+      };
 // Update scheduling event information
 const updateEvent = async (req, res) => {
   try {
@@ -96,6 +106,8 @@ const deleteEvent = async (req, res) => {
 router.post('/create', createEvent);
 // Retrieve all users
 router.get('/', getEvents);
+// Retrieve all schedules for batch
+router.post('/',getEventsBatch)
 // Update user information
 router.put('update/:id', updateEvent);
 // Delete a user

@@ -3,7 +3,9 @@ const app = express();
 const port = 5000 || process.env.PORT;
 const bodyParser = require('body-parser')
 const cors = require('cors');
-const users = require('./models/users')
+const users = require('./models/users');
+
+require('dotenv').config();
 // connection to database
 require('./database/conn')
 // global middleware

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-
 // connecting database 
-mongoose.connect('mongodb://127.0.0.1:27017/course_table')
+mongoose.connect(process.env.MONGO_DB)
 .then(()=>{
         console.log("Connected to database");
 })
